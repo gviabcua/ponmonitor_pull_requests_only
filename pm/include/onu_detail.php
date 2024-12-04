@@ -72,6 +72,7 @@ if ($onu_status == 3){
     $onu_s = GetOnuPwr($key, $host, $community, $olt_gpon);
     $onu_dist = GetOnuDist($key, $host, $community, $olt_gpon);
     # write to DB
+    $table = $tbl_pref.'onu';
     $query = "UPDATE $table SET pwr = '".$onu_s."', status=1, last_act=NOW() WHERE Id=".$row['Id'];
     ##
     $pwr = $onu_s;
@@ -87,7 +88,8 @@ if ($onu_status == 3){
     $pwr_from_onu = 0;
     $onu_s = 'OFFLINE';
     $onu_dist = "";
-    $query = "UPDATE onu SET status=0 WHERE Id=".$row['Id'];
+    $table = $tbl_pref.'onu';
+    $query = "UPDATE $table SET status=0 WHERE Id=".$row['Id'];
     $tdclass = "red";
     $onuDeregData = GetGponOnuInact($host, 23, $tlog, $tpas, $onu_name);
 }elseif($onu_status == 2){
@@ -95,14 +97,16 @@ if ($onu_status == 3){
     $pwr_from_onu = 0;
     $onu_s = 'OFFLINE';
     $onu_dist = "";
-    $query = "UPDATE onu SET status=0 WHERE Id=".$row['Id'];
+    $table = $tbl_pref.'onu';
+    $query = "UPDATE $table SET status=0 WHERE Id=".$row['Id'];
     $tdclass = "red";
     $onuDeregData = GetDeregData($host, 23, $tlog, $tpas, $onu_name);
 }elseif($onu_status !=6){
     $pwr = 0;
     $onu_s = 'OFFLINE';
     $onu_dist = "";
-    $query = "UPDATE onu SET status=0 WHERE Id=".$row['Id'];
+    $table = $tbl_pref.'onu';
+    $query = "UPDATE $table SET status=0 WHERE Id=".$row['Id'];
     $tdclass = "red";
     $onuRegData = GetRegData($host, 23, $tlog, $tpas, $onu_name);
 }else{
@@ -127,7 +131,7 @@ echo '<td class="grey"><b>'.$labels['pon05'].' OLT</b></td>';
 echo '<td class="grey"><strong>'.$labels['Dist'].'</strong></td>';
 echo '<td class="grey"><strong>'.$labels['Com'].'</strong></td>';
 echo '<td class="grey"><strong>'.$labels['IDKlient'].'</strong></td>';
-echo '<td class="grey"><strong>ONU description</strong></td>';
+echo '<td class="grey"><strong>ONU description/IP Адрес</strong></td>';
 echo "</tr></thead><tbody><tr><td class=\"$tdclass\">";
 if ($detect->isMobile()){
     echo "<small>";
@@ -213,12 +217,12 @@ if ($onu_s != 'OFFLINE'){
     foreach ($onu_eth_ena as $pkey => $pstate) {
         echo "<tr><td>$pkey</td>";
         if ($pstate != '1' AND $pstate != 'up'){
-            echo '<td><font color="red"><strong>disabled</strong></font></td>';
+            echo '<td><font color="grey"><strong>disabled</strong></font></td>';
         }else{
             if ($onu_eth_state[$pkey] == '1' OR $onu_eth_state[$pkey] == 'up'){
-                echo '<td><font color="green"><strong>UP</strong></font></td>';
+                echo '<td><font color="green"><strong>Lan-Port Onu --UP--</strong></font></td>';
             } else {
-                echo '<td><font color="grey"><strong>DOWN</strong></font></td>';
+                echo '<td><font color="red"><strong>Lan-Port Onu --DOWN--</strong></font></td>';
             }
         }
         if ($olt_gpon){

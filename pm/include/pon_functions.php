@@ -406,6 +406,7 @@ function GetGponOnuAct($host, $port, $tlog, $tpas, $onu_name) {
 }
 function GetGponOnuInact($host, $port, $tlog, $tpas, $onu_name) {
     $out = '';
+    $dstoffset = false;
     if (date("I") == 1){
         $dstoffset = true;
     }
